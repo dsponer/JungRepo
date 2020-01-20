@@ -2,6 +2,7 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <WiFiAP.h>
+#include <HTTPClient.h>
 
 // Stepper motor_1(200, 21, 19);
 // Stepper motor_2(200, 18, 5);
@@ -12,9 +13,17 @@ const char *ssid = "JungAP";
 const char *password = "12345678";
 
 unsigned int port = 1024;
-const char * server = "192.168.4.1";
+
+const char *server_control = "http://192.168.4.1:1024/send_data";
+
+String data_receive;
+
+unsigned long previousMillis = 0;
+const long interval = 200;
 
 WiFiClient client_motor;
+
+String http_get_request(const char *server_name);
 
 void test(int dir_pin, int step_pin, int direction, int steps)
 {
@@ -68,14 +77,16 @@ void setup()
 
 void loop()
 {
-
-  if (client_motor.connect(server, port))
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= interval)
   {
-    Serial.println("connected");
-    client_motor.println("GET /search?q=arduino HTTP/1.0");
+    if (WiFi.status() == WL_CONNECTED)
+    {
+      data_receive = http_get_request(server_control);
+      Serial.println(data_receive);
+    }
+    previousMillis = currentMillis;
   }
-
-
 
   // test(21, 19, 1, 100);
   // delay(1000);
@@ -109,4 +120,27 @@ void loop()
   // 	}
   // }
   // trig_statement = top_sensor;
+}
+
+String http_get_request(const char *server_name)
+{
+  HTTPClient http;
+  http.begin(server_name);
+  int http_response = http.GET();
+  String pay_load = "--";
+
+  if (http_response > 0)
+  {
+    Serial.print("http code: ");
+    Serial.println(http_response);
+    pay_load = http.getString();
+  }
+  else
+  {
+    Serial.print("error ");
+    Serial.println(http_response);
+  }
+
+  http.end();
+  return pay_load;
 }

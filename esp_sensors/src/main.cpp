@@ -4,6 +4,7 @@
 #include <WiFiClient.h>
 #include <WiFiAP.h>
 #include <WheelData.h>
+#include <ESPAsyncWebServer.h>
 
 
 volatile long temp_1, temp_2, counter_1, counter_2 = 0;
@@ -28,6 +29,10 @@ void ai2();
 void ai3();
 void ai4();
 
+String write_control();
+
+String data_send;
+
 void InitServer(const char *ssid, const char *password);
 
 unsigned int port = 1024;
@@ -35,7 +40,8 @@ unsigned int port = 1024;
 const char * host_unity = "192.168.4.4";
 const char * host_motor = "192.168.4.2";
 
-WiFiServer server(port);
+AsyncWebServer  server(port);
+
 WiFiClient client_unity;
 WiFiClient client_motor;
 
@@ -184,7 +190,14 @@ void ai4()
   }
 }
 
-bool trig_statement = false;
+String write_control() {
+  
+  data_send = "hello test";
+  
+  return data_send;
+  //return String(1.8 * bme.readTemperature() + 32);
+}
+
 
 void InitServer(const char *ssid, const char *password)
 {
@@ -196,6 +209,10 @@ void InitServer(const char *ssid, const char *password)
   Serial.println(myIP);
   Serial.print("Server port: ");
   Serial.println(port);
+  server.on("/send_data", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", write_control().c_str());
+  });
+
   server.begin();
   Serial.println("Server started");
 }
