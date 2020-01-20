@@ -73,31 +73,36 @@ void loop()
 {
   // WiFiClient client = server.available();
 
-  if (!client_unity.connect(host_unity, port))
-  {
-    Serial.println("Jung's wheel connected");
-    String incoming_data = "";
-    // while (client.connected())
-    // {
-      if (client_unity.available())
-      {
-        incoming_data = client_unity.readStringUntil('}');
-        incoming_data += '}';
-        recv_data.get_data_from_string(incoming_data);
-        incoming_data = "";
-      }
+  // if (!client_unity.connect(host_unity, port))
+  // {
+  //   Serial.println("Jung's wheel connected");
+  //   String incoming_data = "";
+  //   // while (client.connected())
+  //   // {
+  //     if (client_unity.available())
+  //     {
+  //       incoming_data = client_unity.readStringUntil('}');
+  //       incoming_data += '}';
+  //       recv_data.get_data_from_string(incoming_data);
+  //       incoming_data = "";
+  //     }
     // }
     // client.stop();
     // Serial.println("Jung's wheel disconnected.");
-  }
+  // }
 
-  if(!client_motor.connect(host_motor, port)){
-    Serial.println("ESP Motor connected");
-    if(client_motor.available()){
-      client_motor.print("Hello esp");
-    }
-    // client_motor.stop();
-  }
+  // if(!client_motor.connect(host_motor, port)){
+  //   Serial.println("ESP Motor connected");
+  //   if(client_motor.available()){
+  //     client_motor.print("Hello esp");
+  //     Serial.println("Connected to server successful!");
+
+
+  //     Serial.println("Disconnecting...");
+  //     client_motor.stop();
+  //   }
+  //   // client_motor.stop();
+  // }
 
 
 

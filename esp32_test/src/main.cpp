@@ -1,9 +1,3 @@
-/*
- Name:		JungWiFi.ino
- Author:	FrankEinstein
- Version:   0.1A
-*/
-
 #include <Arduino.h>
 #include <WiFi.h>
 #include <WiFiClient.h>
@@ -16,6 +10,11 @@
 
 const char *ssid = "JungAP";
 const char *password = "12345678";
+
+unsigned int port = 1024;
+const char * server = "192.168.4.1";
+
+WiFiClient client_motor;
 
 void test(int dir_pin, int step_pin, int direction, int steps)
 {
@@ -69,6 +68,15 @@ void setup()
 
 void loop()
 {
+
+  if (client_motor.connect(server, port))
+  {
+    Serial.println("connected");
+    client_motor.println("GET /search?q=arduino HTTP/1.0");
+  }
+
+
+
   // test(21, 19, 1, 100);
   // delay(1000);
 
