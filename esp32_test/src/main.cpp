@@ -14,18 +14,21 @@
 // Stepper motor_3(200, 4, 2);
 // Stepper motor_4(200, 23, 22);
 
-const char* ssid = "JungAP";
-const char* password =  "12345678";
+const char *ssid = "JungAP";
+const char *password = "12345678";
 
-void test(int dir_pin, int step_pin, int direction, int steps){
-  
-  if(direction == 1){
+void test(int dir_pin, int step_pin, int direction, int steps)
+{
+
+  if (direction == 1)
+  {
     digitalWrite(dir_pin, HIGH);
   }
-  else{
+  else
+  {
     digitalWrite(dir_pin, LOW);
   }
-  
+
   for (int i = 0; i < steps; i++)
   {
     digitalWrite(step_pin, HIGH);
@@ -35,11 +38,10 @@ void test(int dir_pin, int step_pin, int direction, int steps){
   }
 }
 
-
-void setup() 
+void setup()
 {
-	Serial.begin(9600);
-	
+  Serial.begin(9600);
+
   //setting up pins
   pinMode(2, OUTPUT);
   pinMode(4, OUTPUT);
@@ -52,17 +54,20 @@ void setup()
   pinMode(22, OUTPUT);
   pinMode(23, OUTPUT);
 
+  WiFi.begin(ssid, password);
 
-  	WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(500);
+    Serial.println("Connecting to WiFi..");
+  }
+  Serial.println("Connect Done");
 
-  while (WiFi.status() != WL_CONNECTED) {
-  	delay(500);
-  	Serial.println("Connecting to WiFi..");
-	}
+  Serial.print("WiFi connected with IP: ");
+  Serial.println(WiFi.localIP());
 }
 
-
-void loop() 
+void loop()
 {
   // test(21, 19, 1, 100);
   // delay(1000);
@@ -88,13 +93,12 @@ void loop()
   // test(21, 19, 0, 100);
   // delay(1000);
 
-
-	// if (top_sensor == true && trig_statement != top_sensor) {
-	// 	while (top_sensor != 0) {
-	// 		motor_1.step(-1);
+  // if (top_sensor == true && trig_statement != top_sensor) {
+  // 	while (top_sensor != 0) {
+  // 		motor_1.step(-1);
   //     Serial.println(top_sensor);
-	// 		top_sensor = digitalRead(SENSOR_TOP);
-	// 	}
-	// }
-	// trig_statement = top_sensor;
+  // 		top_sensor = digitalRead(SENSOR_TOP);
+  // 	}
+  // }
+  // trig_statement = top_sensor;
 }

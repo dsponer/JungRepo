@@ -5,6 +5,7 @@
 #include <WiFiAP.h>
 #include <WheelData.h>
 
+
 volatile long temp_1, temp_2, counter_1, counter_2 = 0;
 
 #define ENC_PIN_11 34
@@ -31,8 +32,12 @@ void InitServer(const char *ssid, const char *password);
 
 unsigned int port = 1024;
 
+const char * host_unity = "192.168.4.4";
+const char * host_motor = "192.168.4.2";
+
 WiFiServer server(port);
-WiFiClient client;
+WiFiClient client_unity;
+WiFiClient client_motor;
 
 WheelData recv_data;
 
@@ -66,25 +71,37 @@ void setup()
 
 void loop()
 {
-  WiFiClient client = server.available();
+  // WiFiClient client = server.available();
 
-  if (client)
+  if (!client_unity.connect(host_unity, port))
   {
     Serial.println("Jung's wheel connected");
     String incoming_data = "";
-    while (client.connected())
-    {
-      if (client.available())
+    // while (client.connected())
+    // {
+      if (client_unity.available())
       {
-        incoming_data = client.readStringUntil('}');
+        incoming_data = client_unity.readStringUntil('}');
         incoming_data += '}';
         recv_data.get_data_from_string(incoming_data);
         incoming_data = "";
       }
-    }
-    client.stop();
-    Serial.println("Jung's wheel disconnected.");
+    // }
+    // client.stop();
+    // Serial.println("Jung's wheel disconnected.");
   }
+
+  if(!client_motor.connect(host_motor, port)){
+    Serial.println("ESP Motor connected");
+    if(client_motor.available()){
+      client_motor.print("Hello esp");
+    }
+    // client_motor.stop();
+  }
+
+
+
+  
   /*
   Serial.println(" ");
   Serial.println(digitalRead(ENDER_PIN_1));
